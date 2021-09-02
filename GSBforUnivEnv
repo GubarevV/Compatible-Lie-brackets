@@ -3,6 +3,12 @@ A:=FreeAssociativeAlgebraWithOne(F,"a","b","c","d","e","f","r","s","t","z","y","
 a:=A.a;; b:=A.b;; c:=A.c;; d:=A.d;; e:=A.e;; f:=A.f;; r:=A.r;; s:=A.s;; t:=A.t;; x:=A.x;; y:=A.y;; z:=A.z;;
 GBNP.ConfigPrint("a","b","c","d","e","f","r","s","t","z","y","x");
 gens:=GeneratorsOfAlgebra(A);
+
+######## Here we identify f_1 = a, f_2 = b, f_3 = c, f_4 = d, f_5 = e, f_6 = f
+######## Here we identify F_1 = x, F_2 = y, F_3 = z, F_4 = t, F_5 = s, F_6 = r
+
+######## We create all relations (1)-(6); (7) up to degree 6
+
 rels:=[];;
 for i in [2..7] do
   for j in [i..7] do
@@ -35,6 +41,9 @@ for i in [2..7] do
   fi;  
   od;
 od;
+
+######## Now, we type all defining relations and compute Groebner-Shirshov basis 
+
 KI_gp:=[x*y-y*x,x*z-z*x,y*z-z*y,t*z-z*t,t*y-y*t,t*x-x*t,s*x-x*s,s*y-y*s,s*z-z*s,s*t-t*s,r*x-x*r,r*y-y*r,r*z-z*r,r*t-t*r,r*s-s*r,
 a*b-b*a,a*c-c*a,b*c-c*b,a*d-d*a,b*d-d*b,c*d-d*c,a*e-e*a,b*e-e*b,c*e-e*c,d*e-e*d,a*f-f*a,b*f-f*b,c*f-f*c,d*f-f*d,e*f-f*e,
 a*a-a*x-x*a+x*x,b*b-b*y-y*b+y*y,c*c-c*z-z*c+z*z,d*d-d*t-t*d+t*t,e*e-e*s-s*e+s*s,f*f-f*r-r*f+r*r,
@@ -45,8 +54,15 @@ c*d-z*d-c*t+z*t,d*c-d*z-t*c+t*z,c*e-c*s-z*e+z*s,e*c-s*c-e*z+s*z,c*f-z*f-c*r+z*r,
 d*e-d*s-t*e+t*s,e*d-s*d-e*t+s*t,d*f-t*f-d*r+t*r,f*d-r*d-f*t+r*t,e*f-s*f-e*r+s*r,f*e-r*e-f*s+r*s];;
 KI:=GP2NPList(KI_gp);;
 R:=SGrobner(KI,581);;
+
+######## 581 is a number of steps when the algorithm gets all compositions of length 6
+######## So, R.G contains all compositions of the initial relations up to degree 6
+
 Rels:=GP2NPList(rels);;
 Ind:=0;;
+
+######## Now we check if Rels and R.G do coincide
+
 for p in R.G do
     if not (p in Rels) then
     Ind:=1;
