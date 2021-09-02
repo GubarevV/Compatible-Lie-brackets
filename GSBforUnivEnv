@@ -1,0 +1,60 @@
+F:=Rationals;;
+A:=FreeAssociativeAlgebraWithOne(F,"a","b","c","d","e","f","r","s","t","z","y","x");;
+a:=A.a;; b:=A.b;; c:=A.c;; d:=A.d;; e:=A.e;; f:=A.f;; r:=A.r;; s:=A.s;; t:=A.t;; x:=A.x;; y:=A.y;; z:=A.z;;
+GBNP.ConfigPrint("a","b","c","d","e","f","r","s","t","z","y","x");
+gens:=GeneratorsOfAlgebra(A);
+rels:=[];;
+for i in [2..7] do
+  for j in [i..7] do
+  Add(rels,gens[15-j]*gens[15-i]-gens[15-j]*gens[i]-gens[j]*gens[15-i]+gens[i]*gens[j]);  
+    for k in [j+1..7] do
+    Add(rels,gens[15-j]*gens[i]*gens[15-k]-gens[15-k]*gens[i]*gens[15-j]-gens[k]*gens[15-j]*gens[i]+gens[j]*gens[15-k]*gens[i]+gens[i]*gens[k]*gens[15-j]-gens[i]*gens[j]*gens[15-k]);
+    od;  
+  if (j>i) then
+  Add(rels,gens[j]*gens[i]-gens[i]*gens[j]);
+  Add(rels,gens[15-i]*gens[15-j]-gens[15-j]*gens[i]-gens[j]*gens[15-i]+gens[i]*gens[j]);
+  Add(rels,gens[15-i]*gens[j]-gens[15-j]*gens[i]-gens[j]*gens[15-i]+gens[i]*gens[15-j]);
+    for k in [j..7] do
+    Add(rels,gens[15-k]*gens[j]*gens[15-i]-gens[15-k]*gens[i]*gens[15-j]-gens[j]*gens[k]*gens[15-i]+gens[i]*gens[k]*gens[15-j]);
+      for n in [k..7] do
+      Add(rels,gens[15-n]*gens[j]*gens[15-k]*gens[i]+gens[15-n]*gens[j]*gens[k]*gens[15-i]-gens[15-n]*gens[i]*gens[15-k]*gens[j]-gens[15-n]*gens[i]*gens[k]*gens[15-j]-gens[j]*gens[n]*gens[15-k]*gens[i]-gens[j]*gens[k]*gens[n]*gens[15-i]+gens[i]*gens[n]*gens[15-k]*gens[j]+gens[i]*gens[k]*gens[n]*gens[15-j]);
+      od;
+    od;
+   for k in [2..i] do
+   Add(rels,gens[15-i]*gens[k]*gens[j]-gens[15-j]*gens[k]*gens[i]-gens[j]*gens[15-i]*gens[k]+gens[i]*gens[15-j]*gens[k]);
+     for l in [k..i] do
+     Add(rels,gens[15-i]*gens[k]*gens[l]*gens[j]-gens[15-j]*gens[k]*gens[l]*gens[i]-gens[j]*gens[15-i]*gens[k]*gens[l]+gens[i]*gens[15-j]*gens[k]*gens[l]);
+       for m in [l..i] do
+       Add(rels,gens[15-i]*gens[k]*gens[l]*gens[m]*gens[j]-gens[15-j]*gens[k]*gens[l]*gens[m]*gens[i]-gens[j]*gens[15-i]*gens[k]*gens[l]*gens[m]+gens[i]*gens[15-j]*gens[k]*gens[l]*gens[m]);
+         for q in [m..i] do
+         Add(rels,gens[15-i]*gens[k]*gens[l]*gens[m]*gens[q]*gens[j]-gens[15-j]*gens[k]*gens[l]*gens[m]*gens[q]*gens[i]-gens[j]*gens[15-i]*gens[k]*gens[l]*gens[m]*gens[q]+gens[i]*gens[15-j]*gens[k]*gens[l]*gens[m]*gens[q]);
+         od;
+       od;
+     od;
+   od;
+  fi;  
+  od;
+od;
+KI_gp:=[x*y-y*x,x*z-z*x,y*z-z*y,t*z-z*t,t*y-y*t,t*x-x*t,s*x-x*s,s*y-y*s,s*z-z*s,s*t-t*s,r*x-x*r,r*y-y*r,r*z-z*r,r*t-t*r,r*s-s*r,
+a*b-b*a,a*c-c*a,b*c-c*b,a*d-d*a,b*d-d*b,c*d-d*c,a*e-e*a,b*e-e*b,c*e-e*c,d*e-e*d,a*f-f*a,b*f-f*b,c*f-f*c,d*f-f*d,e*f-f*e,
+a*a-a*x-x*a+x*x,b*b-b*y-y*b+y*y,c*c-c*z-z*c+z*z,d*d-d*t-t*d+t*t,e*e-e*s-s*e+s*s,f*f-f*r-r*f+r*r,
+a*b-a*y-x*b+x*y,b*a-y*a-b*x+y*x,a*c-a*z-x*c+x*z,c*a-z*a-c*x+z*x,a*d-a*t-x*d+x*t,d*a-t*a-d*x+t*x,
+a*e-a*s-x*e+x*s,e*a-s*a-e*x+s*x,a*f-x*f-a*r+x*r,f*a-r*a-f*x+r*x,b*c-b*z-y*c+y*z,c*b-z*b-c*y+z*y,
+b*d-b*t-y*d+y*t,d*b-t*b-d*y+t*y,b*e-b*s-y*e+y*s,e*b-s*b-e*y+s*y,b*f-y*f-b*r+y*r,f*b-r*b-f*y+r*y,
+c*d-z*d-c*t+z*t,d*c-d*z-t*c+t*z,c*e-c*s-z*e+z*s,e*c-s*c-e*z+s*z,c*f-z*f-c*r+z*r,f*c-r*c-f*z+r*z,
+d*e-d*s-t*e+t*s,e*d-s*d-e*t+s*t,d*f-t*f-d*r+t*r,f*d-r*d-f*t+r*t,e*f-s*f-e*r+s*r,f*e-r*e-f*s+r*s];;
+KI:=GP2NPList(KI_gp);;
+R:=SGrobner(KI,581);;
+Rels:=GP2NPList(rels);;
+Ind:=0;;
+for p in R.G do
+    if not (p in Rels) then
+    Ind:=1;
+    fi;
+od;
+for p in Rels do
+    if not (p in R.G) then
+    Ind:=1;
+    fi;
+od;
+Print(Ind);
